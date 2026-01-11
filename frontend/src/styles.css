@@ -1,0 +1,11 @@
+.game-cover {
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+}
+
+.cart-thumb {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 8px;
+}
