@@ -14,14 +14,17 @@ export function createStoreApi() {
     async getGames() {
       return client.get("/games");
     },
+    async getGameById(id) {
+      return client.get("/games/" + id);
+    },
     async getCart() {
       return client.get("/cart");
     },
-    async addToCart(gameId) {
-      return client.post("/cart/items", { gameId: gameId });
+    async addToCart(gameId, editionId) {
+      return client.post("/cart/items", { gameId: gameId, editionId: editionId });
     },
-    async removeFromCart(gameId) {
-      return client.del("/cart/items/" + gameId);
+    async removeFromCart(itemId) {
+      return client.del("/cart/items/" + itemId);
     },
     async clearCart() {
       return client.del("/cart");

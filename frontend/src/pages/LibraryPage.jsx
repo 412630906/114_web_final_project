@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Loading from "../components/Loading.jsx";
 import { storeApi } from "../api/index.js";
 import { formatTWD } from "../utils/money.js";
@@ -7,11 +7,6 @@ export default function LibraryPage(props) {
   const [loading, setLoading] = useState(true);
   const [library, setLibrary] = useState({ games: [] });
   const [error, setError] = useState("");
-
-  const count = useMemo(() => {
-    var g = library.games || [];
-    return g.length;
-  }, [library]);
 
   useEffect(() => {
     var alive = true;
@@ -34,19 +29,11 @@ export default function LibraryPage(props) {
     }
 
     load();
-
-    return () => {
-      alive = false;
-    };
+    return () => { alive = false; };
   }, []);
 
-  if (loading) {
-    return <Loading text="載入遊戲庫中..." />;
-  }
-
-  if (error) {
-    return <div className="alert alert-danger">{error}</div>;
-  }
+  if (loading) return <Loading text="載入遊戲庫中..." />;
+  if (error) return <div className="alert alert-danger">{error}</div>;
 
   var games = library.games || [];
   var empty = false;
@@ -54,33 +41,30 @@ export default function LibraryPage(props) {
 
   return (
     <div>
-      <div className="d-flex align-items-end justify-content-between mb-3">
+      <div className="page-head">
         <div>
-          <h3 className="mb-1">我的遊戲庫</h3>
-          <div className="text-muted">已擁有 {count} 款遊戲</div>
+          <div className="page-title">我的遊戲庫</div>
+          <div className="page-sub">你已擁有 {games.length} 個項目</div>
         </div>
-        <a className="btn btn-outline-secondary" href="#/">
+        <a className="btn btn-outline-light" href="#/">
           回到商店
         </a>
       </div>
 
       {empty ? (
-        <div className="alert alert-secondary">
-          目前沒有已購買遊戲，去商店加入購物車並結帳吧！
+        <div className="panel">
+          <div className="muted">目前沒有已購買遊戲，去商店購買吧。</div>
         </div>
       ) : (
-        <div className="row g-3">
+        <div className="grid-tiles">
           {games.map((g) => (
-            <div className="col-12 col-sm-6 col-lg-3" key={g.gameId}>
-              <div className="card h-100 shadow-sm">
-                <img src={g.coverSnapshot} alt={g.titleSnapshot} className="card-img-top game-cover" />
-                <div className="card-body">
-                  <div className="fw-semibold">{g.titleSnapshot}</div>
-                  <div className="text-muted">{formatTWD(g.priceSnapshot)}</div>
-                  <div className="small text-muted mt-2">
-                    購買時間：{new Date(g.purchasedAt).toLocaleString()}
-                  </div>
-                </div>
+            <div className="tile" key={g.gameId + "_" + g.editionId}>
+              <img className="tile-img" src={g.coverSnapshot} alt={g.titleSnapshot} />
+              <div className="tile-body">
+                <div className="tile-title">{g.titleSnapshot}</div>
+                <div className="tile-sub">{g.editionSnapshot}</div>
+                <div className="tile-price">{formatTWD(g.priceSnapshot)}</div>
+                <div className="tile-time">購買時間：{new Date(g.purchasedAt).toLocaleString()}</div>
               </div>
             </div>
           ))}

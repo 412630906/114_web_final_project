@@ -19,14 +19,17 @@ async function parseJsonSafe(res) {
 }
 
 function errorFromResponse(payload, fallbackMsg) {
-  if (!payload) return new Error(fallbackMsg);
-  if (payload.message) return new Error(payload.message);
+  if (payload) {
+    if (payload.message) return new Error(payload.message);
+    if (payload.error && payload.error.code) return new Error(payload.error.code);
+  }
   return new Error(fallbackMsg);
 }
 
 export function createClient(baseUrl) {
   async function request(method, path, body) {
     var url = buildUrl(baseUrl, path);
+
     var headers = {
       "Content-Type": "application/json",
       "X-Guest-Id": getGuestId()
@@ -45,7 +48,7 @@ export function createClient(baseUrl) {
     }
 
     if (!payload) {
-      return { success: true, message: "OK", data: {} };
+      return {};
     }
 
     if (payload.success === false) {

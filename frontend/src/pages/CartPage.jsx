@@ -13,9 +13,7 @@ export default function CartPage(props) {
   const total = useMemo(() => {
     var sum = 0;
     var items = cart.items || [];
-    for (var i = 0; i < items.length; i++) {
-      sum += items[i].priceSnapshot;
-    }
+    for (var i = 0; i < items.length; i++) sum += items[i].priceSnapshot;
     return sum;
   }, [cart]);
 
@@ -37,9 +35,9 @@ export default function CartPage(props) {
     refresh();
   }, []);
 
-  async function removeItem(gameId) {
+  async function removeItem(itemId) {
     try {
-      await storeApi.removeFromCart(gameId);
+      await storeApi.removeFromCart(itemId);
       await refresh();
       if (onToast) onToast("已移除購物車");
     } catch (e) {
@@ -59,7 +57,7 @@ export default function CartPage(props) {
 
   async function checkout() {
     try {
-      const res = await storeApi.checkout();
+      await storeApi.checkout();
       if (onToast) onToast("結帳成功！已加入遊戲庫");
       window.location.hash = "#/library";
     } catch (e) {
@@ -67,13 +65,8 @@ export default function CartPage(props) {
     }
   }
 
-  if (loading) {
-    return <Loading text="載入購物車中..." />;
-  }
-
-  if (error) {
-    return <div className="alert alert-danger">{error}</div>;
-  }
+  if (loading) return <Loading text="載入購物車中..." />;
+  if (error) return <div className="alert alert-danger">{error}</div>;
 
   var items = cart.items || [];
   var empty = false;
@@ -81,54 +74,52 @@ export default function CartPage(props) {
 
   return (
     <div>
-      <div className="d-flex align-items-end justify-content-between mb-3">
+      <div className="page-head">
         <div>
-          <h3 className="mb-1">購物車</h3>
-          <div className="text-muted">目前共 {items.length} 款遊戲</div>
+          <div className="page-title">購物車</div>
+          <div className="page-sub">版本會一起加入遊戲庫</div>
         </div>
-        <a className="btn btn-outline-secondary" href="#/">
+        <a className="btn btn-outline-light" href="#/">
           回到商店
         </a>
       </div>
 
       {empty ? (
-        <div className="alert alert-secondary">
-          購物車是空的，回商店把遊戲加入購物車吧！
+        <div className="panel">
+          <div className="muted">購物車是空的，去商店挑遊戲吧。</div>
         </div>
       ) : (
-        <div className="card shadow-sm">
-          <div className="card-body">
-            <div className="list-group">
-              {items.map((it) => (
-                <div className="list-group-item d-flex align-items-center justify-content-between gap-3" key={it.gameId}>
-                  <div className="d-flex align-items-center gap-3">
-                    <img src={it.coverSnapshot} alt={it.titleSnapshot} className="cart-thumb" />
-                    <div>
-                      <div className="fw-semibold">{it.titleSnapshot}</div>
-                      <div className="text-muted">{formatTWD(it.priceSnapshot)}</div>
-                    </div>
+        <div className="panel">
+          <div className="list-group list-group-flush">
+            {items.map((it) => (
+              <div className="list-group-item cart-row" key={it.itemId}>
+                <div className="cart-left">
+                  <img className="cart-thumb" src={it.coverSnapshot} alt={it.titleSnapshot} />
+                  <div>
+                    <div className="cart-title">{it.titleSnapshot}</div>
+                    <div className="cart-sub">{it.editionSnapshot}</div>
                   </div>
-                  <button className="btn btn-outline-danger btn-sm" onClick={() => removeItem(it.gameId)}>
+                </div>
+
+                <div className="cart-right">
+                  <div className="cart-price">{formatTWD(it.priceSnapshot)}</div>
+                  <button className="btn btn-outline-danger btn-sm" onClick={() => removeItem(it.itemId)}>
                     移除
                   </button>
                 </div>
-              ))}
-            </div>
-
-            <div className="d-flex justify-content-between align-items-center mt-3">
-              <div className="fs-5 fw-semibold">總金額：{formatTWD(total)}</div>
-              <div className="d-flex gap-2">
-                <button className="btn btn-outline-secondary" onClick={clearCart}>
-                  清空
-                </button>
-                <button className="btn btn-success" onClick={checkout}>
-                  結帳
-                </button>
               </div>
-            </div>
+            ))}
+          </div>
 
-            <div className="text-muted small mt-2">
-              註：此版本不含金流，結帳代表建立訂單並加入遊戲庫。
+          <div className="cart-footer">
+            <div className="cart-total">總金額：{formatTWD(total)}</div>
+            <div className="d-flex gap-2">
+              <button className="btn btn-outline-secondary" onClick={clearCart}>
+                清空
+              </button>
+              <button className="btn btn-green btn-green-lg" onClick={checkout}>
+                結帳
+              </button>
             </div>
           </div>
         </div>
