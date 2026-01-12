@@ -1,4 +1,4 @@
-# Mini Steam（訪客版遊戲商店）
+# Mini Steam（遊戲商店平台）
 
 以 **React + Express + MongoDB** 打造的迷你 Steam 風格遊戲商店，前後端分離。支援訪客瀏覽遊戲、進入遊戲詳細頁（截圖輪播）、選擇版本（Standard / Deluxe / Ultimate）加入購物車、結帳並加入「我的遊戲庫」，介面支援深/淺色主題切換。
 
