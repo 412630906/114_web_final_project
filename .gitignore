@@ -1,0 +1,61 @@
+# =========================
+# OS
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# IDE / Editor
+# =========================
+.vscode/
+.idea/
+*.iml
+
+# =========================
+# Logs
+# =========================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# =========================
+# Environment variables (Secrets)
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# Node / React (Vite)
+# =========================
+node_modules/
+dist/
+build/
+.cache/
+.parcel-cache/
+
+# Vite
+.vite/
+
+# =========================
+# Backend runtime files
+# =========================
+coverage/
+*.pid
+*.pid.lock
+
+# =========================
+# Optional: Uploads (如果你之後做圖片上傳要存後端本地)
+# 目前你是用 URL / public 圖片就不需要
+# =========================
+backend/uploads/
+
+# =========================
+# Docker local volumes (如果你用本地資料夾掛載資料庫才需要)
+# 你目前用 named volume mongo_data 通常不會出現在 repo
+# =========================
+mongo_data/
+data/
